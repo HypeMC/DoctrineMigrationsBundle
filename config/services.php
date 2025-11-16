@@ -69,7 +69,7 @@ return static function (ContainerConfigurator $container) {
 
         ->set('doctrine.migrations.service_migrations_repository', ServiceMigrationsRepository::class)
             ->args([
-                abstract_arg('migrations locator'),
+                tagged_locator('doctrine_migrations.migration'),
             ])
 
         ->set('doctrine.migrations.connection', Connection::class)

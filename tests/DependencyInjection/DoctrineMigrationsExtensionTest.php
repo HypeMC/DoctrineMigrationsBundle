@@ -9,7 +9,6 @@ use Composer\Semver\VersionParser;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\CacheCompatibilityPass;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Bundle\MigrationsBundle\DependencyInjection\CompilerPass\RegisterMigrationsPass;
 use Doctrine\Bundle\MigrationsBundle\DependencyInjection\DoctrineMigrationsExtension;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Doctrine\Bundle\MigrationsBundle\Tests\Fixtures\Migrations\ContainerAwareMigration;
@@ -479,7 +478,6 @@ class DoctrineMigrationsExtensionTest extends TestCase
         $config    = ['enable_service_migrations' => true];
         $container = $this->getContainer($config);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
-        $container->addCompilerPass(new RegisterMigrationsPass());
 
         $container->register('foo', FooService::class);
         $container->register(ServiceMigration001::class)
@@ -512,7 +510,6 @@ class DoctrineMigrationsExtensionTest extends TestCase
         $config    = ['enable_service_migrations' => false];
         $container = $this->getContainer($config);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
-        $container->addCompilerPass(new RegisterMigrationsPass());
 
         $container->register('foo', FooService::class);
         $container->register(ServiceMigration001::class)

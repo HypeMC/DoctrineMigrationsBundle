@@ -6,14 +6,17 @@ namespace Doctrine\Bundle\MigrationsBundle\DependencyInjection;
 
 use Doctrine\Bundle\MigrationsBundle\Collector\MigrationsCollector;
 use Doctrine\Bundle\MigrationsBundle\Collector\MigrationsFlattener;
+use Doctrine\DBAL\Connection;
 use Doctrine\Migrations\AbstractMigration;
 use Doctrine\Migrations\Metadata\Storage\MetadataStorage;
 use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Doctrine\Migrations\MigrationsRepository;
 use Doctrine\Migrations\Version\MigrationFactory;
 use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Argument\BoundArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,6 +56,10 @@ class DoctrineMigrationsExtension extends Extension
 
         if ($config['enable_service_migrations']) {
             $container->registerForAutoconfiguration(AbstractMigration::class)
+                ->setBindings([
+                    Connection::class => new BoundArgument(new Reference('doctrine.migrations.connection'), false),
+                    LoggerInterface::class => new BoundArgument(new Reference('doctrine.migrations.logger'), false),
+                ])
                 ->addTag('doctrine_migrations.migration');
 
             if (! isset($config['services'][MigrationsRepository::class])) {
